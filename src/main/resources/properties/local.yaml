@@ -1,0 +1,19 @@
+https: 
+  port: "8081"
+  host: "0.0.0.0"
+  basepath: "/"
+  keystore: 
+    type: "JKS"
+    path: "keystore/keystore-local.jks"
+    alias: "keystore"
+  
+rawg: 
+  host: "api.rawg.io"
+  basepath: "/api"
+  protocol: "HTTPS"
+
+api: 
+  id: "19476634"
+  
+
+  

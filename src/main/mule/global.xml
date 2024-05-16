@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd  http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+    <apikit:config name="rawg-sapi-config" api="resource::dbe242dd-74a5-4820-92ee-42d06c39528f:rawg-sapi:1.0.5:raml:zip:rawg-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <http:listener-config name="rawg-sapi-httpListenerConfig" basePath="${https.basepath}">
+        <http:listener-connection host="${https.host}" port="${https.port}" protocol="HTTPS">
+            <tls:context>
+                <tls:key-store type="${https.keystore.type}" path="${https.keystore.path}" alias="${https.keystore.alias}" keyPassword="${secure::https.keystore.password}" password="${secure::https.keystore.password}" />
+            </tls:context>
+        </http:listener-connection>
+    </http:listener-config>
+    <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="b9a137e4-38f6-4a61-8646-558c15b28636" basePath="${rawg.basepath}">
+        <http:request-connection protocol="${rawg.protocol}" host="${rawg.host}" />
+    </http:request-config>
+    <configuration-properties doc:name="Configuration properties" doc:id="6fe008a0-7b6b-4507-b9b4-3f8ecf0991db" file="properties/${env}.yaml" />
+    <global-property doc:name="Global Property" doc:id="9ea94adf-07be-4137-a56c-6d7e9ddff521" name="env" value="local" />
+    <secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="ca280ebd-a255-4087-9e66-4f243d370724" file="properties/secure.${env}.yaml" key="${secure.key}">
+        <secure-properties:encrypt algorithm="Blowfish" />
+    </secure-properties:config>
+    <api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a043371b-ea20-42f2-bd54-5e863007bd75" flowRef="rawg-sapi-main" />
+</mule>
